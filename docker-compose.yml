@@ -1,0 +1,30 @@
+version: '3'
+
+networks:
+  backend:
+
+services:
+    
+  audit-db:
+    image: mongo
+    ports: 
+      - 4710:27017
+    networks:
+      - backend
+
+  audit-api:
+    build: .
+    command: npm start  
+    depends_on:
+      - audit-db
+    env_file: audit-api.env
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 3800:3000
+      - 6800:5858
+    networks:
+      - backend
